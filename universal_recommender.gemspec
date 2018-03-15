@@ -33,7 +33,7 @@ EOF
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'predictionio', '~> 0.12.1'
-  spec.add_runtime_dependency 'activesupport', '~> 5.1.5'
+  spec.add_runtime_dependency 'activesupport', '> 4'
 
   spec.add_development_dependency 'bundler', '~> 1.14'
   spec.add_development_dependency 'rake', '~> 10.0'
