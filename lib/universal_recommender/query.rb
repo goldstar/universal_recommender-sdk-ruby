@@ -27,9 +27,12 @@ module UniversalRecommender
   #     .boost(amount: 1.5, category_ids: [1])
   #
   class Query
-    DEFAULT_LIMIT = 20
+    include Enumerable
 
-    def initialize
+    attr_reader :engine
+
+    def initialize(engine:)
+      @engine = engine
       @fields = []
     end
 
@@ -138,6 +141,12 @@ module UniversalRecommender
         num: @limit,
         fields: @fields
       }.reject{|_,v| v.nil? }
+    end
+
+    def each
+      return enum_for(:each) unless block_given?
+
+      @engine.execute_query(self).each {|result| yield result }
     end
 
     private

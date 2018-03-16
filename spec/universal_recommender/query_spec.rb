@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe UniversalRecommender::Query do
-  let(:query) { described_class.new }
+  let(:engine) { instance_double(UniversalRecommender::Engine) }
+  let(:query) { described_class.new(engine: engine) }
 
   describe '#for_user' do
     it 'sets the value of user for the query' do
@@ -125,6 +126,13 @@ RSpec.describe UniversalRecommender::Query do
           expect { query.boost(amount: 0.9) }.to raise_error(ArgumentError)
         end
       end
+    end
+  end
+
+  describe '#to_a' do
+    it 'returns results' do
+      allow(engine).to receive(:execute_query).and_return(['i-1'])
+      expect(query.to_a).to eq(['i-1'])
     end
   end
 end
