@@ -24,6 +24,13 @@ module UniversalRecommender
       self.threads = config.fetch(:threads, ENV['UR_THREADS'])
     end
 
+    # Returns a query object for this engine.
+    #
+    # @return UniversalRecommender::Query
+    def query
+      UniversalRecommender::Query.new(engine: self)
+    end
+
     # Instantiate an instance of PredictionIO::EventClient for this engine.
     #
     # @return PredictionIO::EventClient

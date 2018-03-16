@@ -13,6 +13,17 @@ RSpec.describe UniversalRecommender::Engine do
     )
   }
 
+  describe '#query' do
+    it 'returns a query object for this engine' do
+      query = engine.query
+
+      aggregate_failures do
+        expect(query).to be_a(UniversalRecommender::Query)
+        expect(query.engine).to eq(engine)
+      end
+    end
+  end
+
   describe '#engine_client' do
     it 'properly builds and returns a PredictionIO::EngineClient' do
       aggregate_failures do
@@ -34,7 +45,7 @@ RSpec.describe UniversalRecommender::Engine do
   end
 
   describe '#execute_query' do
-    let(:query) { UniversalRecommender::Query.new }
+    let(:query) { engine.query }
     before do
       allow(engine).to receive(:engine_client).and_return(engine_client)
     end
