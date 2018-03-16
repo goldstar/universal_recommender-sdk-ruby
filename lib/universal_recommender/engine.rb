@@ -45,13 +45,21 @@ module UniversalRecommender
     # @param query [UniversalRecommender::Query]
     # @return [Array<Hash>] An array of hashes with an item and score for each
     #   recommendation result returned.
+    # @param reifier_options [Hash{Symbol => anything}]
     #
     # @example
     #   engine.execute_query(query)
     #   # => [{"item" => "i-1", "score" => 1.0}]
     #
-    def execute_query(query)
-      engine_client.send_query(query.query_hash).fetch('itemScores', [])
+    def execute_query(query, reify: true, **reifier_options)
+      query_results = engine_client.send_query(query.query_hash)
+        .fetch('itemScores', [])
+
+      if reify
+        reify(query_results, **reifier_options)
+      else
+        query_results
+      end
     end
 
     # Reify the results of a query if the engine reifier is set. is defined. If
@@ -61,7 +69,6 @@ module UniversalRecommender
     # @param item_scores [Array<Hash>] An array of item and scores from an
     #   executed query.
     # @param reifier_options [Hash{Symbol => anything}]
-    #
     def reify(query_results, **reifier_options)
       return query_results unless defined? reifier
 

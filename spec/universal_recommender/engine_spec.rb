@@ -50,11 +50,28 @@ RSpec.describe UniversalRecommender::Engine do
 
     context 'when query returns results' do
       let(:results) { {'itemScores' => [{'item' => 'i-1', 'score' => 0.0}]} }
-      before { allow(engine_client).to receive(:send_query).and_return(results) }
+      before do
+        allow(engine_client).to receive(:send_query).and_return(results)
+        engine.define_singleton_method(:reifier) {|query_results, _|
+          query_results.map {|item_score| item_score['item'] }
+        }
+      end
 
-      it 'returns an array of item score hashes' do
-        expect(engine.execute_query(query))
-          .to eq([{'item' => 'i-1', 'score' => 0.0}])
+      context 'when reify is false' do
+        it 'returns an array of item score hashes' do
+          expect(engine.execute_query(query, reify: false))
+            .to eq([{'item' => 'i-1', 'score' => 0.0}])
+        end
+      end
+
+      context 'when reify is true' do
+        it 'returns reified results' do
+          expect(engine.execute_query(query, reify: true)).to eq(['i-1'])
+        end
+      end
+
+      it 'reifies results by default' do
+        expect(engine.execute_query(query)).to eq(['i-1'])
       end
     end
   end
