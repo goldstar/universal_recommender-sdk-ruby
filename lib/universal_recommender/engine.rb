@@ -21,7 +21,7 @@ module UniversalRecommender
       self.engine_port = config.fetch(:engine_port, ENV['UR_ENGINE_PORT'])
       self.event_port = config.fetch(:event_port, ENV['UR_EVENT_PORT'])
       self.host = config.fetch(:host, ENV['UR_HOST'])
-      self.threads = config.fetch(:threads, ENV['UR_THREADS'])
+      self.threads = config.fetch(:threads, ENV['UR_THREADS']).to_i
     end
 
     # Returns a query object for this engine.
