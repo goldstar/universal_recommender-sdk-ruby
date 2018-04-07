@@ -36,7 +36,7 @@ module UniversalRecommender
     # @return PredictionIO::EventClient
     #
     def event_client
-      PredictionIO::EventClient.new(access_key, "http://#{host}:#{event_port}",
+      @event_client ||= PredictionIO::EventClient.new(access_key, "http://#{host}:#{event_port}",
         threads)
     end
 
@@ -44,7 +44,7 @@ module UniversalRecommender
     #
     # @return PredictionIO::EngineClient
     def engine_client
-      PredictionIO::EngineClient.new("http://#{host}:#{engine_port}")
+      @engine_client ||= PredictionIO::EngineClient.new("http://#{host}:#{engine_port}")
     end
 
     # Executes a query against the engine and returns the item scores.
